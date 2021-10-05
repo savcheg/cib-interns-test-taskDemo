@@ -1,10 +1,6 @@
 # Тестовое задание для Java стажеров
 
----
-
 ## Hiroku link: [cib-interns-test-task-savcheg](https://cib-interns-test-task-savcheg.herokuapp.com)
-
----
 
 ## Использовались
 * Java 11
