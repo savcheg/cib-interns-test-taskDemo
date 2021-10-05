@@ -6,20 +6,22 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Класс-контроллер с аннотацией @RestController, который
+ * обрабатывает HTTP запросы
+ */
 @RestController
 @RequestMapping("/api")
 public class SockController {
-    private final SockDAO sockDAO;
 
+    private final SockDAO sockDAO;
     public SockController(SockDAO sockDAO) {
         this.sockDAO = sockDAO;
     }
 
-    @GetMapping()
-    List<Sock> getSocks() {
-        return sockDAO.showAll();
-    }
-
+    /**
+     * Метод обрабатывающий Get-запрос с параметрами
+     */
     @GetMapping("/socks")
     @ResponseBody
     ResponseEntity<List<Sock>> getSocksParam(@RequestParam("color") String color,
@@ -29,7 +31,9 @@ public class SockController {
     }
 
     /**
-     * POST запросы которые принимают JSON
+     * POST запросы принимающие JSON-объект, который обрабатывается
+     * аннотацией Spring @RequestBody и представляется в виде объекта
+     * класса Sock
      */
     @PostMapping("/socks/income")
     ResponseEntity incomeSocks(@RequestBody Sock sock) {

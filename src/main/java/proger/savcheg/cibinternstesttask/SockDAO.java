@@ -9,9 +9,16 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Класс-компонент с аннотацией @Component реализующий паттерн Data Access Object(DAO)
+ */
 @Component
 public class SockDAO {
-
+    /**
+     * Параметры подключения к БД
+     * P.S. не смог вынести в файл *.properties
+     * Данные для подключения даны Heroku
+     */
     private static final String DRIVER = "org.postgresql.Driver";
     private static final String URL = "jdbc:postgresql://ec2-54-155-61-133.eu-west-1.compute.amazonaws.com:5432/d5mnf88jn2nbdo";
     private static final String USERNAME = "trdvvdjlgyiesc";
@@ -19,6 +26,12 @@ public class SockDAO {
 
     private static Connection connection;
 
+    /**
+     * Обработка подключения к реляционной БД postgreSQL
+     *
+     * Инициализация БД описана скриптом initDB_postgres.sql в папке resources/db
+     * Там же находится pg_dump файл локальной БД postgreSQL
+     */
     static {
         try {
             Class.forName(DRIVER);
@@ -32,31 +45,9 @@ public class SockDAO {
         }
     }
 
-
-    public List<Sock> showAll() {
-        List<Sock> sockList = new ArrayList<>();
-
-        try {
-            Statement statement = connection.createStatement();
-            String SQL = "SELECT * FROM sockslist";
-            ResultSet resultSet = statement.executeQuery(SQL);
-
-            while (resultSet.next()) {
-                Sock sock = new Sock();
-                sock.setId(resultSet.getInt("id"));
-                sock.setColor(resultSet.getString("color"));
-                sock.setCottonPart(resultSet.getInt("cottonpart"));
-                sock.setQuantity(resultSet.getInt("quantity"));
-
-                sockList.add(sock);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return sockList;
-    }
-
+    /**
+     * Добавление нового типа Носков в БД
+     */
     public void newSocks(Sock sock) {
         try {
             PreparedStatement preparedStatement =
@@ -72,6 +63,10 @@ public class SockDAO {
         }
     }
 
+    /**
+     * Реализация GET /api/socks с параметрами color, operation, cottonPart
+     *
+     */
     public List<Sock> showWithParam(String color, String operation, int cottonPart) {
         List<Sock> sockList = new ArrayList<>();
         try {
@@ -83,10 +78,13 @@ public class SockDAO {
                     connection.prepareStatement("select * from sockslist where cottonpart = ? and color = ?");
             preparedStatementMT.setInt(1, cottonPart);
             preparedStatementMT.setString(2, color);
+
             preparedStatementLT.setInt(1, cottonPart);
             preparedStatementLT.setString(2, color);
+
             preparedStatementE.setInt(1, cottonPart);
             preparedStatementE.setString(2, color);
+
             ResultSet resultSet = null;
             if (operation.equals("moreThan"))
                 resultSet = preparedStatementMT.executeQuery();
@@ -110,12 +108,14 @@ public class SockDAO {
         return sockList;
     }
 
-    public HttpStatus income(Sock sock) { //принимает JSON файл
-        /**
-         * Если в БД есть объект с id = hash(color, cottonPart) то увеличить количество пар носков
-         *
-         * Иначе создать новый объект в таблице
-         */
+    /**
+     * Реализация POST /api/socks/income
+     *
+     * Если в БД есть объект с id = hash(color, cottonPart) то увеличить количество пар носков
+     *
+     * Иначе создать новый объект в таблице
+     */
+    public HttpStatus income(Sock sock) { //принимает JSON объект
         try {
             PreparedStatement checkStatement =
                     connection.prepareStatement("select * from sockslist where id = ?");
@@ -138,7 +138,18 @@ public class SockDAO {
         return HttpStatus.OK;
     }
 
-    public HttpStatus outcome(Sock sock) {
+    /**
+     * Реализация POST /api/socks/outcome
+     *
+     * Проверка на наличие объкта в БД -> Bad Request
+     *
+     * Проверка не приведёт ли разность к количеству меньше нуля -> Bad Request
+     *
+     * Проверка неприведёт ли разность к количеству равному нулю -> delete row
+     *
+     * Иначе увеличить количество пар на значение переданное в JSON-объекте -> OK
+     */
+    public HttpStatus outcome(Sock sock) { //принимает JSON объект
         try {
             PreparedStatement checkStatement =
                     connection.prepareStatement("select * from sockslist where id = ?");
