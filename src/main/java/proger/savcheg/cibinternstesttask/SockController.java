@@ -24,10 +24,10 @@ public class SockController {
      */
     @GetMapping("/socks")
     @ResponseBody
-    ResponseEntity<List<Sock>> getSocksParam(@RequestParam("color") String color,
+    ResponseEntity<Integer> getSocksParam(@RequestParam("color") String color,
                                              @RequestParam("operation") String operation,
                                              @RequestParam("cottonPart") int cottonPart) {
-        return new ResponseEntity<>(sockDAO.showWithParam(color, operation, cottonPart), HttpStatus.OK);
+        return new ResponseEntity<>(sockDAO.showWithParam(color, operation, cottonPart).getQuantity(), HttpStatus.OK);
     }
 
     /**

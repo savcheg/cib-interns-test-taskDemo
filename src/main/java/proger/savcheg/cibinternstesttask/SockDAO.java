@@ -1,13 +1,9 @@
 package proger.savcheg.cibinternstesttask;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Класс-компонент с аннотацией @Component реализующий паттерн Data Access Object(DAO)
@@ -65,10 +61,9 @@ public class SockDAO {
 
     /**
      * Реализация GET /api/socks с параметрами color, operation, cottonPart
-     *
      */
-    public List<Sock> showWithParam(String color, String operation, int cottonPart) {
-        List<Sock> sockList = new ArrayList<>();
+    public Sock showWithParam(String color, String operation, int cottonPart) {
+        Sock sock = new Sock();
         try {
             PreparedStatement preparedStatementMT =
                     connection.prepareStatement("select * from sockslist where cottonpart > ? and color = ?");
@@ -93,19 +88,16 @@ public class SockDAO {
             if (operation.equals("equal"))
                 resultSet = preparedStatementE.executeQuery();
 
-            while (resultSet.next()) {
-                Sock sock = new Sock();
+            if(resultSet.next()) {
                 sock.setId(resultSet.getInt("id"));
                 sock.setColor(resultSet.getString("color"));
                 sock.setCottonPart(resultSet.getInt("cottonpart"));
                 sock.setQuantity(resultSet.getInt("quantity"));
-
-                sockList.add(sock);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return sockList;
+        return sock;
     }
 
     /**
