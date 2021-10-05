@@ -1,5 +1,7 @@
 package proger.savcheg.cibinternstesttask;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -30,10 +32,7 @@ public class Sock {
         this.id = hash(color, cottonPart);
     }
 
-    private long hashId(String color, int cottonPart) {
-        return color.hashCode() + cottonPart % 13;
-    }
-
+    @JsonIgnore
     public int getId() {
         return id;
     }
