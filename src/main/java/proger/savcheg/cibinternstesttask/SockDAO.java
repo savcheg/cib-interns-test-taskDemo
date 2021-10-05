@@ -1,6 +1,7 @@
 package proger.savcheg.cibinternstesttask;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.sql.*;
@@ -62,7 +63,7 @@ public class SockDAO {
     /**
      * Реализация GET /api/socks с параметрами color, operation, cottonPart
      */
-    public Sock showWithParam(String color, String operation, int cottonPart) {
+    public ResponseEntity<Integer> showWithParam(String color, String operation, int cottonPart) {
         Sock sock = new Sock();
         try {
             PreparedStatement preparedStatementMT =
@@ -87,6 +88,8 @@ public class SockDAO {
                 resultSet = preparedStatementLT.executeQuery();
             if (operation.equals("equal"))
                 resultSet = preparedStatementE.executeQuery();
+            else
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 
             if(resultSet.next()) {
                 sock.setId(resultSet.getInt("id"));
@@ -97,7 +100,7 @@ public class SockDAO {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return sock;
+        return new ResponseEntity<>(sock.getQuantity(), HttpStatus.OK);
     }
 
     /**

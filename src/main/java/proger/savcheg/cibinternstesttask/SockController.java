@@ -27,7 +27,7 @@ public class SockController {
     ResponseEntity<Integer> getSocksParam(@RequestParam("color") String color,
                                              @RequestParam("operation") String operation,
                                              @RequestParam("cottonPart") int cottonPart) {
-        return new ResponseEntity<>(sockDAO.showWithParam(color, operation, cottonPart).getQuantity(), HttpStatus.OK);
+        return sockDAO.showWithParam(color, operation, cottonPart);
     }
 
     /**
