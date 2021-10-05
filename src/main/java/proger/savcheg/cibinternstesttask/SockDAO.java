@@ -30,7 +30,7 @@ public class SockDAO {
      * Обработка подключения к реляционной БД postgreSQL
      *
      * Инициализация БД описана скриптом initDB_postgres.sql в папке resources/db
-     * Там же находится pg_dump файл локальной БД postgreSQL
+     * Там же находится pg_dump CSV файл локальной БД postgreSQL
      */
     static {
         try {
