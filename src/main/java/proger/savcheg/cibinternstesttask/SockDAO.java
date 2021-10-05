@@ -84,9 +84,9 @@ public class SockDAO {
             ResultSet resultSet = null;
             if (operation.equals("moreThan"))
                 resultSet = preparedStatementMT.executeQuery();
-            if (operation.equals("lessThan"))
+            else if (operation.equals("lessThan"))
                 resultSet = preparedStatementLT.executeQuery();
-            if (operation.equals("equal"))
+            else if (operation.equals("equal"))
                 resultSet = preparedStatementE.executeQuery();
             else
                 return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
