@@ -1,20 +1,21 @@
 package proger.savcheg.cibinternstesttask;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import java.net.http.HttpRequest;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class SockDAO {
-    private static final String DRIVER = "org.postgresql.Driver";
-    private static final String URL = "jdbc:postgresql://localhost:5432/socks";
-    private static final String USERNAME = "postgres";
-    private static final String PASSWORD = "Savcheg";
 
+    private static final String DRIVER = "org.postgresql.Driver";
+    private static final String URL = "jdbc:postgresql://ec2-54-155-61-133.eu-west-1.compute.amazonaws.com:5432/d5mnf88jn2nbdo";
+    private static final String USERNAME = "trdvvdjlgyiesc";
+    private static final String PASSWORD = "23fe60e0d4ea318aa4142c4ebfcad6199137945940d2b0e946842d2187760c9a";
 
     private static Connection connection;
 
@@ -138,7 +139,6 @@ public class SockDAO {
     }
 
     public HttpStatus outcome(Sock sock) {
-        System.out.println(sock);
         try {
             PreparedStatement checkStatement =
                     connection.prepareStatement("select * from sockslist where id = ?");
