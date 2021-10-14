@@ -81,7 +81,7 @@ public class SockDAO {
             preparedStatementE.setInt(1, cottonPart);
             preparedStatementE.setString(2, color);
 
-            ResultSet resultSet = null;
+            ResultSet resultSet;
             if (operation.equals("moreThan"))
                 resultSet = preparedStatementMT.executeQuery();
             else if (operation.equals("lessThan"))
